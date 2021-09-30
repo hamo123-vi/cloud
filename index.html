@@ -1,0 +1,176 @@
+<html>
+    <head>
+      <title>Cloud | Radnici</title>
+      <meta charset="UTF-8">
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">    </head>
+      <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+      <div class="container">
+
+        <!-- ADD modal -->
+        <div class="modal fade" id="addModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Novi radnik</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <label for="ime">Ime</label>
+                    <input type="name" class="form-control" id="ime" placeholder="Ime" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="prezime">Prezime</label>
+                    <input type="name" class="form-control" id="prezime" placeholder="Prezime" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="jmbg">JMBG</label>
+                    <input type="number" class="form-control" id="jmbg" placeholder="JMBG" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="sektor">Sektor</label> <br>
+                    <select id="sektorAdd" class="selectSectorAdd form-control" style="width: 100%;" name="sektor" required>
+                      <option></option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="datum">Datum zaposlenja</label>
+                    <input type="text" placeholder="Datum zaposlenja" class="form-control" id="datum" onfocus="(this.type='date')" required>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
+                <button type="submit" id="addButton" onclick="addRadnik()" class="btn btn-primary">Dodaj</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End of ADD modal -->
+
+
+        <!-- UPDATE modal-->
+        <div class="modal fade" id="updateModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Uredi radnika</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form id="editForm">
+                  <div class="form-group">
+                    <label for="ime">Ime</label>
+                    <input type="name" name="imeEdit" class="form-control" id="imeEdit" placeholder="Ime" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="prezime">Prezime</label>
+                    <input type="name" name="prezimeEdit" class="form-control" id="prezimeEdit" placeholder="Prezime" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="jmbg">JMBG</label>
+                    <input type="number" name="jmbgEdit" class="form-control" id="jmbgEdit" placeholder="JMBG" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="sektor">Sektor</label> <br>
+                    <select id="sektorUpdate" name="sektorEdit" class="selectSectorUpdate form-control" style="width: 100%;" required>
+                      <option></option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="datum">Datum zaposlenja</label>
+                    <input type="text" name="datumEdit" placeholder="Datum zaposlenja" class="form-control" id="datumEdit" onfocus="(this.type='date')" required>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
+                <button type="submit" id="updateButton" class="btn btn-warning" onclick="updateRadnik(window.localStorage.getItem('updateId'))">Spremi</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End of UPDATE modal-->
+
+
+        <!-- DELETE modal-->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Upozorenje!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Jeste li sigurni da želite obrisati ovog radnika?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
+                <button type="button" id="deleteButton" onclick="deleteRadnik(window.localStorage.getItem('deleteId'))" class="btn btn-danger">Izbriši</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End of DELETE modal-->
+
+        <div class="row mt-5">
+          <div class="col-12">
+            <table id="myTable" class="display text-center">
+              <thead>
+                <tr>
+                  <th>Ime</th>
+                  <th>Prezime</th>
+                  <th>JMBG</th>
+                  <th>Sektor</th>
+                  <th>Datum zaposlenja</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <a class="refreshButton" onclick="refreshTable()">
+              <i class="fas fa-refresh"></i>&nbspRefresh table
+            </a>
+          </div>
+          <div class="col-12">
+            <button type="button" class="btn btn-info w-100 mt-3" onclick="openAddModal()">
+              Novi radnik
+            </button>    
+                  
+          </div>
+        </div>
+      </div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+      <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/js/all.min.js" integrity="sha512-cyAbuGborsD25bhT/uz++wPqrh5cqPh1ULJz4NSpN9ktWcA6Hnh9g+CWKeNx2R0fgQt+ybRXdabSBgYXkQTTmA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <script type="text/javascript" src="js/get.js"></script>
+      <script type="text/javascript" src="js/add.js"></script>
+      <script type="text/javascript" src="js/update.js"></script>
+      <script type="text/javascript" src="js/delete.js"></script>
+    </body>
+</html>
+
